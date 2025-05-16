@@ -1,0 +1,26 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Register - SmartVote</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div class="login-box">
+    <h2>Register</h2>
+    <select id="regRole">
+      <option value="voter">Voter</option>
+      <option value="candidate">Candidate</option>
+    </select>
+    <input type="text" id="regUsername" placeholder="Username">
+    <input type="password" id="regPassword" placeholder="Password">
+    <input type="text" id="regPRN" placeholder="PRN Number (14 or 15 digits)">
+    <input type="text" id="regBranch" placeholder="Branch (e.g., CSE)">
+    <button onclick="register()">Register</button>
+    <p id="regMsg"></p>
+    <a href="index.html">Back to Login</a>
+  </div>
+  <script src="script.js"></script>
+</body>
+</html>

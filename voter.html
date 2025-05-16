@@ -1,0 +1,40 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Voter Dashboard</title>
+  <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+</head>
+<body class="bg-gradient-to-r from-green-100 to-blue-100 min-h-screen flex items-center justify-center">
+  <div class="bg-white shadow-2xl rounded-3xl p-10 w-full max-w-2xl text-center">
+    <h1 class="text-4xl font-extrabold text-green-700 mb-4">Voter Dashboard</h1>
+    <p class="text-gray-600 mb-8 text-lg">Cast your vote and view election info</p>
+    <div class="grid grid-cols-1 gap-6">
+      <button onclick="voteNow()" class="bg-green-600 text-white py-3 px-6 rounded-xl shadow hover:bg-green-700 transition transform hover:scale-105">Vote Now</button>
+      <button onclick="viewCandidates()" class="bg-blue-600 text-white py-3 px-6 rounded-xl shadow hover:bg-blue-700 transition transform hover:scale-105">View Candidates</button>
+      <button onclick="viewResults()" class="bg-purple-600 text-white py-3 px-6 rounded-xl shadow hover:bg-purple-700 transition transform hover:scale-105">View Election Results</button>
+      <button onclick="logout()" class="bg-gray-500 text-white py-3 px-6 rounded-xl shadow hover:bg-gray-600 transition transform hover:scale-105">Logout</button>
+    </div>
+  </div>
+
+  <script>
+    function voteNow() {
+      alert("Voting functionality will go here.");
+    }
+
+    function viewCandidates() {
+      alert("Show list of approved candidates.");
+    }
+
+    function viewResults() {
+      alert("Display current election results.");
+    }
+
+    function logout() {
+      localStorage.removeItem("currentUser");
+      window.location.href = "login.html";
+    }
+  </script>
+</body>
+</html>

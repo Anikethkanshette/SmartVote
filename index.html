@@ -1,0 +1,25 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>SmartVote Login</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div class="login-box">
+    <h2>SmartVote Login</h2>
+    <select id="role">
+      <option value="super_admin">Super Admin</option>
+      <option value="admin">Admin</option>
+      <option value="voter">Voter</option>
+    </select>
+    <input type="text" id="username" placeholder="Username">
+    <input type="password" id="password" placeholder="Password">
+    <button onclick="login()">Login</button>
+    <p id="msg"></p>
+    <a href="register.html">Register</a>
+  </div>
+  <script src="script.js"></script>
+</body>
+</html>

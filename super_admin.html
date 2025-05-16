@@ -1,0 +1,41 @@
+
+<!DOCTYPE html><html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Super Admin Dashboard</title>
+  <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+</head>
+<body class="bg-gradient-to-r from-yellow-100 to-red-200 min-h-screen flex items-center justify-center">
+  <div class="bg-white shadow-2xl rounded-3xl p-10 w-full max-w-2xl text-center">
+    <h1 class="text-4xl font-extrabold text-red-800 mb-4">Super Admin Dashboard</h1>
+    <p class="text-gray-600 mb-8 text-lg">Manage overall election operations</p>
+    <div class="grid grid-cols-1 sm:grid-cols-2 gap-6">
+      <button onclick="declareElection()" class="bg-red-600 text-white py-3 px-6 rounded-xl shadow hover:bg-red-700 transition transform hover:scale-105">Declare Election</button>
+      <button onclick="setEndDate()" class="bg-yellow-600 text-white py-3 px-6 rounded-xl shadow hover:bg-yellow-700 transition transform hover:scale-105">Set Election End Date</button>
+      <button onclick="approveAdmins()" class="bg-pink-600 text-white py-3 px-6 rounded-xl shadow hover:bg-pink-700 transition transform hover:scale-105">Approve Admins</button>
+      <button onclick="reviewCandidates()" class="bg-indigo-600 text-white py-3 px-6 rounded-xl shadow hover:bg-indigo-700 transition transform hover:scale-105">Final Approve Candidates</button>
+      <button onclick="logout()" class="bg-gray-500 text-white py-3 px-6 rounded-xl shadow hover:bg-gray-600 transition transform hover:scale-105 col-span-2">Logout</button>
+    </div>
+  </div>  <script>
+    function declareElection() {
+      alert("Declare new election logic here");
+    }
+
+    function setEndDate() {
+      alert("Set election end date logic here");
+    }
+
+    function approveAdmins() {
+      alert("Approve or manage admins logic here");
+    }
+
+    function reviewCandidates() {
+      alert("Final approval for candidates logic here");
+    }
+
+    function logout() {
+      localStorage.removeItem("currentUser");
+      window.location.href = "login.html";
+    }
+  </script></body>
+</html>
