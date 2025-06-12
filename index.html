@@ -2,24 +2,355 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
+  <meta charset="UTF-8" />
   <title>SmartVote Login</title>
-  <link rel="stylesheet" href="style.css">
+  <style>
+    /* Basic Reset */
+    * {
+      box-sizing: border-box;
+    }
+
+    body, html {
+      margin: 0;
+      padding: 0;
+      height: 100vh;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      perspective: 1000px;
+      background: linear-gradient(135deg, #1a2a6c, #b21f1f, #fdbb2d);
+      overflow: hidden;
+      color: #fff;
+    }
+
+    .scene {
+      position: relative;
+      width: 100%;
+      height: 100%;
+      overflow: hidden;
+    }
+
+    .parallax-layer {
+      position: absolute;
+      top: 0; left: 0;
+      width: 120%;
+      height: 120%;
+      background-size: cover;
+      background-position: center;
+      will-change: transform;
+      z-index: -1;
+      filter: brightness(0.6);
+    }
+
+    .layer-back {
+      background-image: url('https://www.transparenttextures.com/patterns/black-paper.png');
+      opacity: 0.2;
+    }
+
+    .layer-mid {
+      background-image: url('https://www.transparenttextures.com/patterns/dark-mosaic.png');
+      opacity: 0.15;
+    }
+
+    .layer-front {
+      background-image: url('https://www.transparenttextures.com/patterns/geometry.png');
+      opacity: 0.1;
+    }
+
+    .login-box {
+      position: relative;
+      margin: auto;
+      top: 50%;
+      transform: translateY(-50%);
+      padding: 40px;
+      width: 350px;
+      background: rgba(255, 255, 255, 0.1);
+      backdrop-filter: blur(20px);
+      border-radius: 20px;
+      box-shadow: 0 30px 60px rgba(0, 0, 0, 0.4);
+      z-index: 1;
+      color: #fff;
+      text-align: center;
+      animation: floatCard 6s ease-in-out infinite;
+      user-select: none;
+    }
+
+    @keyframes floatCard {
+      0%, 100% { transform: translateY(-50%) rotateY(0); }
+      50% { transform: translateY(calc(-50% - 10px)) rotateY(1deg); }
+    }
+
+    select, input {
+      width: 100%;
+      padding: 12px;
+      margin: 10px 0;
+      background: rgba(255, 255, 255, 0.2);
+      border: none;
+      border-radius: 10px;
+      color: #fff;
+      font-size: 16px;
+    }
+
+    input::placeholder {
+      color: #ddd;
+    }
+
+    button {
+      background: linear-gradient(to right, #0072ff, #00c6ff);
+      border: none;
+      padding: 12px;
+      width: 100%;
+      color: white;
+      font-weight: bold;
+      border-radius: 12px;
+      cursor: pointer;
+      margin-top: 10px;
+      user-select: none;
+      transition: background 0.3s ease;
+    }
+
+    button:hover {
+      background: linear-gradient(to right, #005bb5, #0099cc);
+    }
+
+    #google-login-btn {
+      background: #db4437;
+      margin-top: 15px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      font-weight: bold;
+    }
+
+    #google-login-btn:hover {
+      background: #c33d2e;
+    }
+
+    #google-login-btn img {
+      height: 20px;
+      width: 20px;
+    }
+
+    a {
+      color: #ddd;
+      font-size: 14px;
+      text-decoration: underline;
+      margin-top: 15px;
+      display: inline-block;
+      user-select: none;
+    }
+
+    #msg {
+      min-height: 24px;
+      margin-top: 5px;
+      font-weight: 600;
+      color: #ffdddd;
+    }
+  </style>
 </head>
 <body>
-  <div class="login-box">
-    <h2>SmartVote Login</h2>
-    <select id="role">
-      <option value="super_admin">Super Admin</option>
-      <option value="admin">Admin</option>
-      <option value="voter">Voter</option>
-    </select>
-    <input type="text" id="username" placeholder="Username">
-    <input type="password" id="password" placeholder="Password">
-    <button onclick="login()">Login</button>
-    <p id="msg"></p>
-    <a href="register.html">Register</a>
+  <div class="scene">
+    <div class="parallax-layer layer-back"></div>
+    <div class="parallax-layer layer-mid"></div>
+    <div class="parallax-layer layer-front"></div>
+
+    <div class="login-box">
+      <h2>SmartVote Login</h2>
+
+      <select id="role" aria-label="Select user role">
+        <option value="super_admin">Super Admin</option>
+        <option value="admin">Admin</option>
+        <option value="voter">Voter</option>
+        <option value="candidate" selected>Candidate</option>
+      </select>
+
+      <input type="text" id="username" placeholder="Username (e.g. Aniketh kanshette)" aria-label="Username" autocomplete="username" />
+      <input type="password" id="password" placeholder="Password" aria-label="Password" autocomplete="current-password" />
+      <button onclick="login()" aria-label="Login button">Login</button>
+
+      <button id="google-login-btn" aria-label="Sign in with Google">
+        <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/5/53/Google_%22G%22_Logo.svg/512px-Google_%22G%22_Logo.svg.png" alt="Google logo" />
+        Sign in with Google
+      </button>
+
+      <p id="msg" role="alert" aria-live="assertive"></p>
+
+      <a href="register.html">Register</a>
+    </div>
   </div>
-  <script src="script.js"></script>
+
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/11.7.1/firebase-app.js";
+    import { getAuth, signInWithEmailAndPassword, GoogleAuthProvider, signInWithPopup } from "https://www.gstatic.com/firebasejs/11.7.1/firebase-auth.js";
+    import { getFirestore, doc, getDoc } from "https://www.gstatic.com/firebasejs/11.7.1/firebase-firestore.js";
+
+    const firebaseConfig = {
+      apiKey: "AIzaSyD73Q9crZ5kqVO2ziU_hp5YTyM24eQSziU",
+      authDomain: "smartvote-b605e.firebaseapp.com",
+      projectId: "smartvote-b605e",
+      storageBucket: "smartvote-b605e.appspot.com",
+      messagingSenderId: "1073958321007",
+      appId: "1:1073958321007:web:cfb8c80143746382f6c69a"
+    };
+
+    const app = initializeApp(firebaseConfig);
+    const auth = getAuth();
+    const firestore = getFirestore();
+    const googleProvider = new GoogleAuthProvider();
+
+    const hardcodedUsers = {
+      super_admin: {
+        "aniketh kanshette": "QW5pa2V0aEAxMg=="  
+      },
+      admin: {
+        "sujit kadam": "MTIzNDU2Nzg5",           
+        "vaibhav kale": "MTIzNDU2Nzg5"          
+      },
+      voter: {
+        "dinesh": "MTIzNDU2Nzg5"                
+      },
+      candidate: {
+        "aakhib": "MTIzNDU2"                      
+      }
+    };
+
+    function decodeBase64(encodedString) {
+      return atob(encodedString);
+    }
+
+    window.login = async function () {
+      const usernameInput = document.getElementById("username").value.trim().toLowerCase();
+      const passwordInput = document.getElementById("password").value;
+      const selectedRole = document.getElementById("role").value;
+      const messageElement = document.getElementById("msg");
+
+      messageElement.textContent = "";
+
+      if (!usernameInput || !passwordInput) {
+        messageElement.textContent = "Please enter username and password.";
+        return;
+      }
+
+      if (hardcodedUsers[selectedRole] && hardcodedUsers[selectedRole][usernameInput]) {
+        const expectedPassword = decodeBase64(hardcodedUsers[selectedRole][usernameInput]);
+
+        if (passwordInput === expectedPassword) {
+          localStorage.setItem("currentUser", usernameInput + "_" + selectedRole);
+
+          redirectToRolePage(selectedRole);
+          return;
+        } else {
+          messageElement.textContent = "Incorrect password.";
+          return;
+        }
+      }
+
+      try {
+        const email = usernameInput + "@smartvote.com";
+        const userCredential = await signInWithEmailAndPassword(auth, email, passwordInput);
+        const userId = userCredential.user.uid;
+
+        const userDocRef = doc(firestore, "users", userId);
+        const userDocSnap = await getDoc(userDocRef);
+
+        if (!userDocSnap.exists()) {
+          messageElement.textContent = "User profile not found in database.";
+          return;
+        }
+
+        const userData = userDocSnap.data();
+
+        if (userData.role !== selectedRole) {
+          messageElement.textContent = `You are registered as '${userData.role}'. Please select the correct role.`;
+          return;
+        }
+
+        if (selectedRole === "candidate" && !userData.approved) {
+          messageElement.textContent = "Your candidate approval is still pending.";
+          return;
+        }
+
+        localStorage.setItem("currentUser", userId);
+        redirectToRolePage(userData.role);
+
+      } catch (error) {
+        messageElement.textContent = "Login failed: " + error.message;
+      }
+    };
+
+    document.getElementById("google-login-btn").addEventListener("click", async () => {
+      const selectedRole = document.getElementById("role").value;
+      const messageElement = document.getElementById("msg");
+      messageElement.textContent = "";
+
+      try {
+        const googleResult = await signInWithPopup(auth, googleProvider);
+        const user = googleResult.user;
+        const userId = user.uid;
+
+        const userDocRef = doc(firestore, "users", userId);
+        const userDocSnap = await getDoc(userDocRef);
+
+        if (!userDocSnap.exists()) {
+          messageElement.textContent = "Your profile is not found in the database.";
+          await auth.signOut();
+          return;
+        }
+
+        const userData = userDocSnap.data();
+
+        if (userData.role !== selectedRole) {
+          messageElement.textContent = `Google account role mismatch: You are registered as '${userData.role}'. Please select the correct role.`;
+          await auth.signOut();
+          return;
+        }
+
+        if (userData.role === "candidate" && !userData.approved) {
+          messageElement.textContent = "Your candidate approval is still pending.";
+          await auth.signOut();
+          return;
+        }
+
+        localStorage.setItem("currentUser", userId);
+        redirectToRolePage(userData.role);
+
+      } catch (error) {
+        messageElement.textContent = "Google login failed: " + error.message;
+      }
+    });
+
+    function redirectToRolePage(role) {
+      switch (role) {
+        case "super_admin":
+          window.location.href = "superadmin.html";
+          break;
+        case "admin":
+          window.location.href = "admin.html";
+          break;
+        case "voter":
+          window.location.href = "voter.html";
+          break;
+        case "candidate":
+          window.location.href = "candidate.html";
+          break;
+        default:
+          window.location.href = "dashboard.html";
+      }
+    }
+  </script>
+
+  <script>
+    document.addEventListener("mousemove", (event) => {
+      const rotateX = (event.clientY / window.innerHeight - 0.5) * 30;
+      const rotateY = (event.clientX / window.innerWidth - 0.5) * 30;
+
+      document.body.style.transform = `rotateX(${-rotateX}deg) rotateY(${rotateY}deg)`;
+
+      document.querySelector('.layer-back').style.transform = `translate3d(${rotateY / 4}px, ${rotateX / 4}px, -50px)`;
+      document.querySelector('.layer-mid').style.transform = `translate3d(${rotateY / 2}px, ${rotateX / 2}px, -30px)`;
+      document.querySelector('.layer-front').style.transform = `translate3d(${rotateY}px, ${rotateX}px, -10px)`;
+    });
+  </script>
 </body>
 </html>
+
+
