@@ -41,9 +41,10 @@ SmartVote is a browser-based voting platform built for institutions and academic
 
 1. Clone or download the project
 2. Open `index.html` in a browser
-3. Register as a voter or login with predefined roles (hardcoded in `script.js`)
+3. Register as a voter or login with predefined roles 
 4. Interact via dashboards based on your role
-
+5. user name aniketh kanshette ( super admin )
+6. password  Aniketh@12
 ## ⚠️ Limitations
 
 - No backend or database (demo only)
